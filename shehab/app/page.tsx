@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // تعريف أنواع البيانات
 interface Product {
@@ -73,7 +73,7 @@ export default function Home() {
   
   // نظام حماية الأدمن 🔐
   const [isAdmin, setIsAdmin] = useState(false);
-  const ADMIN_PASSWORD = "admin123"; // تقدر تغير الباسورد ده لأي حاجة تحبها
+  const ADMIN_PASSWORD = "admin123";
 
   // ميزة البحث
   const [searchQuery, setSearchQuery] = useState("");
@@ -95,6 +95,10 @@ export default function Home() {
   const [newProductPrice, setNewProductPrice] = useState("");
   const [newProductImage, setNewProductImage] = useState("");
   const [allProducts, setAllProducts] = useState<Product[]>(initialProducts);
+
+  // 🎵 ميزة الموسيقى الهادئة
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const EXCHANGE_RATE = 50;
 
@@ -127,10 +131,21 @@ export default function Home() {
     if (!loading) localStorage.setItem("shehab_currency", currency);
   }, [currency, loading]);
 
+  // دالة تشغيل / إيقاف الموسيقى
+  const toggleMusic = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch((err) => console.log("Playback prevented", err));
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
   // دالة تسجيل دخول الأدمن
   const handleAdminLogin = () => {
     if (isAdmin) {
-      // لو مسجل دخول وضغطت تاني، يعمل تسجيل خروج
       setIsAdmin(false);
       localStorage.removeItem("shehab_is_admin");
       alert("Admin logged out successfully.");
@@ -247,6 +262,13 @@ export default function Home() {
 
   return (
     <main className="bg-[#f5f1eb] min-h-screen text-[#111] relative scroll-smooth">
+      {/* عنصر الصوت المخفي للموسيقى الهادئة */}
+   <audio 
+  ref={audioRef} 
+  src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3" 
+  loop 
+/>
+
       <div className="pointer-events-none fixed w-[500px] h-[500px] bg-[#d2ab83]/10 blur-[120px] rounded-full top-[-100px] left-[-100px] animate-pulse"></div>
 
       {/* TOP BAR */}
@@ -266,7 +288,6 @@ export default function Home() {
         <nav className="hidden lg:flex gap-10 text-sm font-bold tracking-widest">
           <a href="#" className="hover:text-[#c69b74] transition-all duration-300">HOME</a>
           <a href="#shop" className="hover:text-[#c69b74] transition-all duration-300">SHOP</a>
-          {/* لن يظهر رابط الداشبورد في القائمة إلا لو كنت أدمن */}
           {isAdmin && (
             <a href="#dashboard" className="text-[#d2ab83] hover:underline transition-all duration-300">DASHBOARD 🛠️</a>
           )}
@@ -285,7 +306,18 @@ export default function Home() {
 
           <button className="lg:hidden text-2xl" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
           
-          {/* زر السكيورتي السري للأدمن 🔒 */}
+          {/* 🎵 زر تشغيل الموسيقى الهادئة الجديد */}
+          <button 
+            onClick={toggleMusic} 
+            className={`hover:scale-110 transition-all text-lg cursor-pointer p-2 rounded-xl border ${
+              isPlaying ? "bg-[#d2ab83] border-[#d2ab83] animate-spin-slow" : "bg-gray-100 border-gray-200"
+            }`}
+            title={isPlaying ? "Mute Music" : "Play Ambient Music"}
+          >
+            {isPlaying ? "🎵" : "🔇"}
+          </button>
+
+          {/* زر السكيورتي للأدمن 🔒 */}
           <button 
             onClick={handleAdminLogin} 
             className="hover:scale-110 transition-all text-lg cursor-pointer bg-gray-100 p-2 rounded-xl border border-gray-200"
@@ -564,7 +596,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 🔐 DASHBOARD SECTION (مش هيظهر غير لو الـ isAdmin بـ true) */}
+      {/* 🔐 DASHBOARD SECTION */}
       {isAdmin && (
         <section id="dashboard" className="px-6 md:px-14 py-20 bg-[#111] text-white animate-fadeIn">
           <div className="max-w-4xl mx-auto">
@@ -644,6 +676,10 @@ export default function Home() {
         @keyframes loadProgress { 0% { width: 0%; } 100% { width: 100%; } }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .animate-fadeIn { animation: fadeIn 0.25s ease-out forwards; }
+        
+        /* تأثير دوران نوتة الموسيقى وهي شغالة */
+        @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .animate-spin-slow { animation: spinSlow 4s linear infinite; }
       `}</style>
     </main>
   );
