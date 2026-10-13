@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1 Exam - Prepared by SHEHAB AMR</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --accent-neon: #00f2fe;
+            --accent-purple: #7928ca;
+            --text-color: #c9d1d9;
+            --text-bright: #ffffff;
+            --correct-bg: rgba(46, 160, 67, 0.2);
+            --correct-border: #2ea043;
+            --incorrect-bg: rgba(248, 81, 73, 0.2);
+            --incorrect-border: #f85149;
+            --border-color: #30363d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Watermark Background */
+        body::before {
+            content: "SHEHAB AMR   SHEHAB AMR   SHEHAB AMR\A SHEHAB AMR   SHEHAB AMR   SHEHAB AMR\A SHEHAB AMR   SHEHAB AMR   SHEHAB AMR\A SHEHAB AMR   SHEHAB AMR   SHEHAB AMR";
+            white-space: pre;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200vw;
+            height: 200vh;
+            font-size: 42px;
+            font-weight: 900;
+            color: rgba(0, 242, 254, 0.03);
+            transform: rotate(-25deg) translate(-15%, -15%);
+            pointer-events: none;
+            z-index: 0;
+            line-height: 3.5;
+            letter-spacing: 12px;
+        }
+
+        header {
+            background: rgba(22, 27, 34, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .author-badge {
+            background: linear-gradient(135deg, rgba(0,242,254,0.15), rgba(121,40,202,0.15));
+            color: var(--accent-neon);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 1px solid rgba(0, 242, 254, 0.4);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #21262d;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-neon), var(--accent-purple));
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 8px var(--accent-neon);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            margin-bottom: 1.5rem;
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.8rem;
+        }
+
+        .q-number {
+            font-weight: 700;
+            color: var(--accent-neon);
+            font-size: 1.05rem;
+        }
+
+        .q-lesson {
+            background: rgba(121, 40, 202, 0.2);
+            border: 1px solid rgba(121, 40, 202, 0.4);
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #d2a8ff;
+            font-weight: 600;
+        }
+
+        .q-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-bright);
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .option-btn {
+            background: #21262d;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent-neon);
+            background: #282e38;
+            color: var(--text-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,242,254,0.1);
+        }
+
+        .option-btn.correct {
+            background: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: #56d364 !important;
+            font-weight: 700;
+            box-shadow: 0 0 10px rgba(46, 160, 67, 0.3);
+        }
+
+        .option-btn.incorrect {
+            background: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-border) !important;
+            color: #f85149 !important;
+            font-weight: 600;
+        }
+
+        .feedback-box {
+            margin-top: 1.2rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback-box.correct {
+            display: block;
+            background: rgba(46, 160, 67, 0.15);
+            color: #56d364;
+            border: 1px solid var(--correct-border);
+        }
+
+        .feedback-box.incorrect {
+            display: block;
+            background: rgba(248, 81, 73, 0.15);
+            color: #f85149;
+            border: 1px solid var(--incorrect-border);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-neon), #00a8ff);
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 10px rgba(0,242,254,0.3);
+        }
+
+        .btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 15px rgba(0,242,254,0.5);
+        }
+
+        .btn:disabled {
+            background: #30363d;
+            color: #8b949e;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .score-card {
+            text-align: center;
+            display: none;
+        }
+
+        .score-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Unit 1: Basic Computer Hardware & Software</div>
+        <div class="author-badge">Prepared by: SHEHAB AMR</div>
+    </header>
+
+    <div class="container">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="card" id="quiz-card">
+            <div class="q-header">
+                <span class="q-number" id="q-number">Question 1 of 60</span>
+                <span class="q-lesson" id="q-lesson">Lesson 1</span>
+            </div>
+            <div class="q-text" id="q-text">Loading question...</div>
+            <div class="options-grid" id="options-container"></div>
+            <div class="feedback-box" id="feedback"></div>
+
+            <div class="controls">
+                <button class="btn" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+                <button class="btn" id="next-btn" onclick="nextQuestion()">Next</button>
+            </div>
+        </div>
+
+        <div class="card score-card" id="score-card">
+            <h2>Exam Completed!</h2>
+            <p style="margin-top:0.5rem; color:#8b949e;">Unit 1 Comprehensive Result</p>
+            <div class="score-number" id="score-text">0 / 60</div>
+            <p id="score-status" style="font-size:1.2rem; font-weight:700; margin-bottom:1rem;"></p>
+            <button class="btn" style="margin-top: 1rem;" onclick="location.reload()">Retake Exam</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // Lesson 1
+            { lesson: "Lesson 1", q: "Which component is the brain of the computer?", options: ["RAM", "CPU", "SSD", "PSU"], answer: 1, explanation: "The CPU (Central Processing Unit) performs all processing and calculations." },
+            { lesson: "Lesson 1", q: "Which component holds the processor on the motherboard?", options: ["SATA port", "CPU socket", "PCIe slot", "DIMM slot"], answer: 1, explanation: "The CPU socket connects the processor to the motherboard." },
+            { lesson: "Lesson 1", q: "Which unit performs logical and arithmetic operations?", options: ["ALU", "CMOS", "PSU", "Fan"], answer: 0, explanation: "The Arithmetic Logic Unit (ALU) carries out math and logical operations." },
+            { lesson: "Lesson 1", q: "Which memory is temporary and erased when power is off?", options: ["RAM", "HDD", "SSD", "DVD"], answer: 0, explanation: "RAM is volatile primary storage." },
+            { lesson: "Lesson 1", q: "Which drive has no moving parts?", options: ["HDD", "SSD", "IDE", "DVD"], answer: 1, explanation: "SSDs use flash memory chips without mechanical parts." },
+            { lesson: "Lesson 1", q: "Which PCIe slot size is primarily used for dedicated graphics cards?", options: ["x1", "x4", "x8", "x16"], answer: 3, explanation: "PCIe x16 provides the highest bandwidth for GPUs." },
+            { lesson: "Lesson 1", q: "Which component converts wall electricity to stable DC power?", options: ["CPU", "PSU", "RAM", "Monitor"], answer: 1, explanation: "Power Supply Unit (PSU) converts power." },
+            { lesson: "Lesson 1", q: "Which device operates as both input and output?", options: ["Printer", "Scanner", "Touch screen", "Speaker"], answer: 2, explanation: "Touch screens display visual data (output) and receive touch input." },
+            { lesson: "Lesson 1", q: "Which connector is standard for 2.5-inch SSDs and HDDs?", options: ["SATA", "VGA", "PS/2", "HDMI"], answer: 0, explanation: "Serial ATA (SATA) connects traditional storage drives." },
+            { lesson: "Lesson 1", q: "Which cooling method uses liquid coolant to transfer heat?", options: ["Air cooling", "Water cooling", "Passive storage", "Software cooling"], answer: 1, explanation: "Water cooling uses fluid circulation." },
+            { lesson: "Lesson 1", q: "True or False: Hardware refers to physical computer components.", options: ["True", "False"], answer: 0, explanation: "Hardware components are tangible physical devices." },
+            { lesson: "Lesson 1", q: "True or False: Thermal paste should be applied in very large amounts.", options: ["True", "False"], answer: 1, explanation: "Only a small pea-sized amount is required." },
+
+            // Lesson 2
+            { lesson: "Lesson 2", q: "Which software category directly manages computer hardware?", options: ["Application", "System", "Presentation", "Graphics"], answer: 1, explanation: "System software controls and interacts with hardware." },
+            { lesson: "Lesson 2", q: "Which of the following is an Operating System?", options: ["Microsoft Word", "Windows", "Canva", "Google Chrome"], answer: 1, explanation: "Windows is a system operating software." },
+            { lesson: "Lesson 2", q: "Which of the following is Application Software?", options: ["BIOS", "Microsoft Excel", "Firmware", "Device Driver"], answer: 1, explanation: "Excel is an application designed for user tasks." },
+            { lesson: "Lesson 2", q: "What software lets the OS communicate with hardware like printers?", options: ["Web browser", "Device driver", "Spreadsheet", "Firmware"], answer: 1, explanation: "Device drivers act as translators between OS and hardware." },
+            { lesson: "Lesson 2", q: "Which software type is designed for typing and formatting text?", options: ["Word processing", "System", "Simulation", "Firmware"], answer: 0, explanation: "Word processing software creates documents." },
+            { lesson: "Lesson 2", q: "Which software manages numerical data with spreadsheet cells?", options: ["Media player", "Spreadsheet", "Browser", "Operating system"], answer: 1, explanation: "Spreadsheet software (like Excel) manages tables and numbers." },
+            { lesson: "Lesson 2", q: "Which application is used to access and view websites?", options: ["Web browser", "Driver", "Firmware", "BIOS"], answer: 0, explanation: "Browsers access the internet." },
+            { lesson: "Lesson 2", q: "Which built-in Windows utility manages disk partitions?", options: ["Paint", "Disk Management", "Notepad", "Calculator"], answer: 1, explanation: "Disk Management tool handles drive partitions." },
+            { lesson: "Lesson 2", q: "What space is required on a drive to create a new volume?", options: ["Unallocated space", "Printer", "Browser", "Driver"], answer: 0, explanation: "New volumes require unallocated disk space." },
+            { lesson: "Lesson 2", q: "Which file system is standard for Windows system partitions?", options: ["NTFS", "JPEG", "MP3", "HTML"], answer: 0, explanation: "NTFS is modern Windows primary file system." },
+            { lesson: "Lesson 2", q: "True or False: Software consists of code and instructions.", options: ["True", "False"], answer: 0, explanation: "Software is intangible programming code." },
+            { lesson: "Lesson 2", q: "True or False: Hardware can operate useful user tasks without software.", options: ["True", "False"], answer: 1, explanation: "Hardware requires software instructions to function." },
+
+            // Lesson 3
+            { lesson: "Lesson 3", q: "Which of the following is a desktop Operating System?", options: ["Android", "Windows", "Rufus", "DriverPack"], answer: 1, explanation: "Windows is desktop OS software." },
+            { lesson: "Lesson 3", q: "Which mobile OS is developed by Apple?", options: ["Linux", "iOS", "Windows Server", "Rufus"], answer: 1, explanation: "Apple produces iOS for iPhones." },
+            { lesson: "Lesson 3", q: "Which OS type provides immediate and precise time response?", options: ["RTOS", "ChromeOS", "Windows Home", "macOS"], answer: 0, explanation: "Real-Time Operating Systems (RTOS) run time-critical tasks." },
+            { lesson: "Lesson 3", q: "Which OS function manages active programs and CPU scheduling?", options: ["File management", "Process management", "Formatting", "Printing"], answer: 1, explanation: "Process management handles CPU execution time." },
+            { lesson: "Lesson 3", q: "Which utility tool is widely used to create bootable USB drives?", options: ["Paint", "Rufus", "Calculator", "Device Manager"], answer: 1, explanation: "Rufus burns ISO images to USB." },
+            { lesson: "Lesson 3", q: "Which file format contains a complete OS installation disk image?", options: ["MP3", "ISO", "JPG", "DOCX"], answer: 1, explanation: ".ISO files hold complete optical disk image data." },
+            { lesson: "Lesson 3", q: "What minimum USB capacity is recommended for OS creation?", options: ["1 GB", "2 GB", "4 GB", "8 GB"], answer: 3, explanation: "At least 8 GB USB drives are recommended for modern OS images." },
+            { lesson: "Lesson 3", q: "Which setting in firmware dictates the startup device sequence?", options: ["Resolution", "Boot order", "Wallpaper", "Password"], answer: 1, explanation: "Boot order determines startup device priority." },
+            { lesson: "Lesson 3", q: "Which Windows utility displays missing or malfunctioning hardware drivers?", options: ["Device Manager", "Recycle Bin", "Taskbar", "Paint"], answer: 0, explanation: "Device Manager shows device driver status." },
+            { lesson: "Lesson 3", q: "Which driver enables network communication (Wi-Fi/Ethernet)?", options: ["Audio", "Network", "Printer", "Graphics"], answer: 1, explanation: "Network drivers enable connectivity." },
+            { lesson: "Lesson 3", q: "True or False: Files should be backed up before OS installation.", options: ["True", "False"], answer: 0, explanation: "OS installation may wipe drive partitions." },
+            { lesson: "Lesson 3", q: "True or False: Power should be disconnected during OS installation.", options: ["True", "False"], answer: 1, explanation: "Uninterrupted power supply is critical during installation." },
+
+            // Lesson 4
+            { lesson: "Lesson 4", q: "Which file extension represents a Microsoft Word document?", options: [".mp3", ".docx", ".jpg", ".exe"], answer: 1, explanation: ".docx is the standard Word format." },
+            { lesson: "Lesson 4", q: "Which file extension represents an image file?", options: [".png", ".wav", ".txt", ".rar"], answer: 0, explanation: ".png is an image extension." },
+            { lesson: "Lesson 4", q: "Which extension belongs to audio files?", options: [".pdf", ".mp3", ".mp4", ".exe"], answer: 1, explanation: ".mp3 is audio format." },
+            { lesson: "Lesson 4", q: "Which file type executes programs on Windows?", options: ["Executable (.exe)", "Audio", "Image", "Document"], answer: 0, explanation: ".exe files run applications." },
+            { lesson: "Lesson 4", q: "Which keyboard shortcut renames a selected file or folder?", options: ["F1", "F2", "F5", "F10"], answer: 1, explanation: "F2 triggers renaming." },
+            { lesson: "Lesson 4", q: "Which example represents an Absolute File Path?", options: ["images\\photo.jpg", "C:\\Projects\\Website\\index.html", "music\\song.mp3", "docs\\report.pdf"], answer: 1, explanation: "Absolute paths start from drive letter root (C:\\)." },
+            { lesson: "Lesson 4", q: "Which file system is primary and standard for modern Windows?", options: ["EXT", "HFS+", "FAT32", "NTFS"], answer: 3, explanation: "NTFS is modern Windows standard." },
+            { lesson: "Lesson 4", q: "Which legacy file system has a strict 4 GB single file limit?", options: ["FAT32", "NTFS", "exFAT", "EXT"], answer: 0, explanation: "FAT32 cannot store individual files over 4 GB." },
+            { lesson: "Lesson 4", q: "Which file system family is native to Linux distributions?", options: ["NTFS", "EXT", "HFS+", "FAT32"], answer: 1, explanation: "EXT4/EXT family is native to Linux." },
+            { lesson: "Lesson 4", q: "Which file system supports large files on flash drives across OSs?", options: ["FAT32", "exFAT", "HFS+", "EXT"], answer: 1, explanation: "exFAT supports large files with high cross-platform compatibility." },
+            { lesson: "Lesson 4", q: "True or False: Windows file names can safely include / and * symbols.", options: ["True", "False"], answer: 1, explanation: "Special characters like / \\ * : ? < > | are forbidden." },
+            { lesson: "Lesson 4", q: "True or False: An absolute path is based relative to current working folder.", options: ["True", "False"], answer: 1, explanation: "Relative paths are relative; absolute paths start from root." },
+
+            // Lesson 5
+            { lesson: "Lesson 5", q: "Where is BIOS firmware physically stored?", options: ["Monitor", "Motherboard ROM chip", "Keyboard", "Printer"], answer: 1, explanation: "BIOS is saved on a motherboard chip." },
+            { lesson: "Lesson 5", q: "Which modern firmware standard replaces legacy BIOS?", options: ["POST", "CMOS", "UEFI", "NTFS"], answer: 2, explanation: "UEFI replaces traditional BIOS." },
+            { lesson: "Lesson 5", q: "What does POST check during computer startup?", options: ["Social media", "Essential hardware components", "Documents", "History"], answer: 1, explanation: "Power-On Self-Test checks essential hardware components." },
+            { lesson: "Lesson 5", q: "What program locates and loads the OS after POST?", options: ["Bootloader", "Printer driver", "Browser", "Extension"], answer: 0, explanation: "Bootstrap loader/bootloader initializes the OS." },
+            { lesson: "Lesson 5", q: "Which partition scheme is traditionally associated with legacy BIOS?", options: ["GPT", "MBR", "NTFS", "exFAT"], answer: 1, explanation: "MBR is legacy scheme; GPT is modern UEFI scheme." },
+            { lesson: "Lesson 5", q: "Which partition scheme is used with UEFI systems?", options: ["FAT32", "HFS+", "GPT", "EXT"], answer: 2, explanation: "GUID Partition Table (GPT) pairs with UEFI." },
+            { lesson: "Lesson 5", q: "What is the primary function of Secure Boot in UEFI?", options: ["Increase RAM speed", "Block unauthorized boot software/malware", "Better resolution", "Create users"], answer: 1, explanation: "Secure Boot stops unsigned bootloaders and malware." },
+            { lesson: "Lesson 5", q: "Which function key commonly saves changes and exits BIOS?", options: ["F1", "F2", "F9", "F10"], answer: 3, explanation: "F10 is standard Save & Exit key in BIOS." },
+            { lesson: "Lesson 5", q: "Which Windows command opens System Information to check BIOS mode?", options: ["cmd", "msinfo32", "regedit", "calc"], answer: 1, explanation: "msinfo32 opens System Information." },
+            { lesson: "Lesson 5", q: "What is the primary risk if power cuts off during a BIOS update?", options: ["Larger monitor", "Corrupted firmware", "More RAM", "New account"], answer: 1, explanation: "Interrupted updates corrupt motherboard firmware." },
+            { lesson: "Lesson 5", q: "True or False: UEFI supports storage drives larger than 2 TB.", options: ["True", "False"], answer: 0, explanation: "UEFI + GPT supports drives far exceeding 2 TB." },
+            { lesson: "Lesson 5", q: "True or False: Interrupting a BIOS update process is safe.", options: ["True", "False"], answer: 1, explanation: "Interrupting a BIOS update causes motherboard damage." }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+
+        function loadQuestion() {
+            const q = questions[currentQ];
+            document.getElementById("q-number").innerText = `Question ${currentQ + 1} of ${questions.length}`;
+            document.getElementById("q-lesson").innerText = q.lesson;
+            document.getElementById("q-text").innerText = q.q;
+
+            const container = document.getElementById("options-container");
+            container.innerHTML = "";
+
+            const feedback = document.getElementById("feedback");
+            feedback.className = "feedback-box";
+            feedback.innerText = "";
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerText = opt;
+
+                if (userAnswers[currentQ] !== null) {
+                    btn.disabled = true;
+                    if (idx === q.answer) btn.classList.add("correct");
+                    if (userAnswers[currentQ] === idx && idx !== q.answer) btn.classList.add("incorrect");
+                } else {
+                    btn.onclick = () => selectOption(idx);
+                }
+
+                container.appendChild(btn);
+            });
+
+            if (userAnswers[currentQ] !== null) {
+                showFeedback(userAnswers[currentQ] === q.answer);
+            }
+
+            document.getElementById("prev-btn").disabled = currentQ === 0;
+            document.getElementById("next-btn").innerText = currentQ === questions.length - 1 ? "Submit Exam" : "Next";
+            document.getElementById("progress-bar").style.width = `${((currentQ + 1) / questions.length) * 100}%`;
+        }
+
+        function selectOption(idx) {
+            userAnswers[currentQ] = idx;
+            const q = questions[currentQ];
+            const isCorrect = idx === q.answer;
+
+            if (isCorrect) score++;
+
+            loadQuestion();
+
+            // Auto advance after 1.2s
+            setTimeout(() => {
+                if (currentQ < questions.length - 1) {
+                    currentQ++;
+                    loadQuestion();
+                } else {
+                    showScore();
+                }
+            }, 1200);
+        }
+
+        function showFeedback(isCorrect) {
+            const feedback = document.getElementById("feedback");
+            const q = questions[currentQ];
+            feedback.innerText = (isCorrect ? "Correct! " : "Incorrect! ") + q.explanation;
+            feedback.className = "feedback-box " + (isCorrect ? "correct" : "incorrect");
+        }
+
+        function nextQuestion() {
+            if (currentQ < questions.length - 1) {
+                currentQ++;
+                loadQuestion();
+            } else {
+                showScore();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQ > 0) {
+                currentQ--;
+                loadQuestion();
+            }
+        }
+
+        function showScore() {
+            document.getElementById("quiz-card").style.display = "none";
+            document.getElementById("score-card").style.display = "block";
+            document.getElementById("score-text").innerText = `${score} / ${questions.length}`;
+
+            const pct = (score / questions.length) * 100;
+            document.getElementById("score-status").innerText = pct >= 60 ? `Passed! (${pct.toFixed(1)}%)` : `Needs Practice (${pct.toFixed(1)}%)`;
+        }
+
+        // Initialize
+        loadQuestion();
+    </script>
+</body>
+</html>
